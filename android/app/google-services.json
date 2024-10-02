@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "796669288308",
+    "project_id": "owaravi",
+    "storage_bucket": "owaravi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:796669288308:android:007b6b725d6a99a578d621",
+        "android_client_info": {
+          "package_name": "com.tomurango.owaravi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQ4kvLKYTSJSs-bEsAP6Kfs3F3Rop3lm8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
