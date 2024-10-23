@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class VideoUploadScreen extends StatefulWidget {
   @override
@@ -37,23 +38,30 @@ class _VideoUploadScreenState extends State<VideoUploadScreen> {
         // Firebase Storageへの動画アップロード
         FirebaseStorage storage = FirebaseStorage.instance;
         String fileName = _selectedVideo!.path.split('/').last;
-        Reference ref = storage.ref().child('videos/$fileName');
+
+        // ユーザーIDを含めたパスを指定
+        String userId = FirebaseAuth.instance.currentUser!.uid; // 認証されたユーザーのIDを取得
+        Reference ref = storage.ref().child('users/$userId/videos/$fileName');
         UploadTask uploadTask = ref.putFile(_selectedVideo!);
 
         TaskSnapshot snapshot = await uploadTask.whenComplete(() => null);
         String downloadUrl = await snapshot.ref.getDownloadURL();
 
-        // Firestoreに動画のメタデータを保存
-        await FirebaseFirestore.instance.collection('videos').add({
-          'title': title,
-          'description': description,
-          'price': double.parse(price), // 料金を保存
-          'videoUrl': downloadUrl,
-          'createdAt': Timestamp.now(),
+        // Firestoreに動画のメタデータを保存（users -> userId -> uploadvideosサブコレクションに保存）
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('uploadvideos')
+            .add({
+        'title': title,
+        'description': description,
+        'price': double.parse(price), // 料金を保存
+        'videoUrl': downloadUrl,
+        'createdAt': Timestamp.now(),
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('動画が正常にアップロードされました！')),
+        SnackBar(content: Text('動画が正常にアップロードされました！')),
         );
 
         // フォームをリセット
@@ -61,7 +69,7 @@ class _VideoUploadScreenState extends State<VideoUploadScreen> {
         _descriptionController.clear();
         _priceController.clear();
         setState(() {
-          _selectedVideo = null;
+        _selectedVideo = null;
         });
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
