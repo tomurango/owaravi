@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import '../models/public_video_model.dart';
 
 // 動画の詳細情報画面
 class VideoDetailScreen extends StatelessWidget {
-  final Map<String, String> video;
+  final PublicVideo video;
 
   VideoDetailScreen({required this.video});
 
@@ -21,7 +22,7 @@ class VideoDetailScreen extends StatelessWidget {
             AspectRatio(
               aspectRatio: 5 / 2, // 横:縦 = 5:3 の比率
               child: Image.network(
-                video['thumbnail']!,
+                video.thumbnail,
                 fit: BoxFit.cover, // 画像が比率内に収まるように表示
                 width: double.infinity, // 横幅いっぱいに表示
               ),
@@ -31,12 +32,12 @@ class VideoDetailScreen extends StatelessWidget {
               children: [
                 // 投稿者アイコン
                 CircleAvatar(
-                  backgroundImage: NetworkImage(video['uploaderIcon']!),
+                  backgroundImage: NetworkImage(video.uploaderIcon),
                 ),
                 SizedBox(width: 10),
                 // 投稿者名
                 Text(
-                  video['uploader']!,
+                  video.uploader,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ],
@@ -44,7 +45,7 @@ class VideoDetailScreen extends StatelessWidget {
             SizedBox(height: 16),
             // 動画タイトル
             Text(
-              video['title']!,
+              video.title,
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16),

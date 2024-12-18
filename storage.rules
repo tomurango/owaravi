@@ -2,11 +2,19 @@ rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
     
-    // ユーザーのファイルを保存するディレクトリ
+    // ユーザーの動画ファイルを保存するディレクトリ
     match /users/{userId}/videos/{fileName} {
-      
-      // ユーザー自身のファイルにアクセスできる
+      // ユーザー自身の動画ファイルにアクセスできる
       allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // ユーザーのサムネイルファイルを保存するディレクトリ
+    match /users/{userId}/thumbnails/{fileName} {
+      // 認証済みユーザーであれば誰でも読み取り可能
+      allow read: if request.auth != null;
+
+      // ユーザー自身のみ書き込み可能
+      allow write: if request.auth != null && request.auth.uid == userId;
     }
   }
 }
